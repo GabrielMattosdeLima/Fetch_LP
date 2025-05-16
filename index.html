@@ -1,12 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Lista de Animais</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #5537dd;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 10px 0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #121094;
+      color: rgb(253, 253, 253);
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>blabla22</h1>
-    
+
+  <h1>Animais Cadastrados</h1>
+  <ul id="lista-animais"></ul>
+  <button onclick="cadastrarAnimal()">Cadastrar Animal</button>
+
+  <script>
+    const API_URL = 'https://6827b2f36b7628c529112a2f.mockapi.io/Animal'; 
+
+    // Função para buscar animais da API
+    async function carregarAnimais() {
+      const resposta = await fetch(API_URL);
+      const animais = await resposta.json();
+      
+      const lista = document.getElementById('lista-animais');
+      lista.innerHTML = '';
+
+      animais.forEach(animal => {
+        const item = document.createElement('li');
+        item.textContent = `${animal.id} - ${animal.nome} (${animal.idade})  ${animal.raca}`;
+        lista.appendChild(item);
+      });
+    }
+
+    // Função para cadastrar um animal hardcode
+    async function cadastrarAnimal() {
+      const novoAnimal = {
+        nome: 'Totó',
+        idade: 12,
+        raca: 'Cachorro'
+      };
+
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(novoAnimal)
+      });
+
+      carregarAnimais(); // Atualiza a lista após cadastrar
+    }
+
+    // Carrega a lista ao iniciar a página
+    carregarAnimais();
+  </script>
+
 </body>
 </html>
